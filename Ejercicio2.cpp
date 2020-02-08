@@ -63,7 +63,10 @@ Anotaciones
 *******************************************************************************/
 
 #include <iostream> 
+
+#include <pthread.h>
 using namespace std; 
+#define NUM_THREADS 5
   
 
 int findMaxRec(int A[], int n) 
