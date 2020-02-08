@@ -15,15 +15,31 @@
 
     int findMaxRec(int A[], int n) 
     { 
+        int start = 0, end = n-1; 
+        int lowVal =10;
+        int highVal = 20;
         if (n == 1) 
             return A[0]; 
+        for (int i=0; i<=end;) 
+        { 
+            //si el elemento es mas pequeno que el rango, se pone disponible en la siguiente posicion
+            if (A[i] < lowVal) 
+                swap(A[i++], A[start++]);
+
+            //si el elemento es mas largo que el rango
+            else if (A[i] > highVal) 
+                swap(A[i], A[end--]); 
+
+            else
+                i++; 
+        }
         return max(A[n-1], findMaxRec(A, n-1)); 
     } 
     
     int main()
     {
         srand(time(0));
-        srand(time(NULL)); //seed the generator
+        srand(time(NULL)); 
         clock_t t; 
         t = clock();
         int i ,j, asize , max1,Num_Threads,ret,status;
