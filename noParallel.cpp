@@ -1,110 +1,56 @@
-/******************************************************************************
-Domain decomposition 
-: 
-Divide 
-data into pieces
-–
-Determine how to associate computations with the data
-–
-Focuses on the largest and most frequently accessed data structure
-•
-Functional 
-decomposition 
-: 
-Divide 
-computation into pieces
-–
-Determine how to associate data with the computations
-•
-Independent 
-tasks : 
-subdivide computation into tasks 
-that do 
-not 
-depend on each other (
-embarrassingly parallel 
-)
-•
-Array parallelism : 
-simultaneous operations on entries 
-of vectors
-, 
-matrices, or other arrays
-•
-Divide
--
-and
--
-conquer :
-recursively divide problem 
-into tree
--
-like 
-hierarchy 
-of 
-subproblems
-•
-Pipelining :
-break 
-problem into sequence of stages 
-for  each 
-of 
-sequence of 
-objects
-Please post examples for each on piazza.
-
-
-
-
-
-
-Anotaciones
-
-*******************************************************************************/
-
 #include <iostream> 
+#include <time.h> //or ctime
+#include <stdio.h> 
+#include <time.h> 
+#include <thread>   
 using namespace std; 
-  
 
 int findMaxRec(int A[], int n) 
 { 
-
+    int start = 0, end = n-1; 
+    int lowVal =10;
+    int highVal = 20;
     if (n == 1) 
         return A[0]; 
-    return max(A[n-1], findMaxRec(A, n-1)); 
-} 
-
-void Particion(int arr[], int n, 
-                int lowVal, int highVal) 
-{ 
-    //inicializa las posiciones disponibles para un pequeno rango y largo rango de elementos
-    int start = 0, end = n-1; 
-  
-    // Agarra los elementos desde la izquierda
     for (int i=0; i<=end;) 
     { 
-    
         //si el elemento es mas pequeno que el rango, se pone disponible en la siguiente posicion
-        if (arr[i] < lowVal) 
-            swap(arr[i++], arr[start++]); 
-  
+        if (A[i] < lowVal) 
+            swap(A[i++], A[start++]);
+
         //si el elemento es mas largo que el rango
-        else if (arr[i] > highVal) 
-            swap(arr[i], arr[end--]); 
-  
+        else if (A[i] > highVal) 
+            swap(A[i], A[end--]); 
+
         else
             i++; 
-    } 
+    }
+    return max(A[n-1], findMaxRec(A, n-1));  
 } 
-  
+
 
 int main() 
 { 
-    int A[] = {1, 4, 45, 6, -50, 10, 2}; 
-    int n = sizeof(A)/sizeof(A[0]); 
-    Particion(A, n, 10, 20);
-    for (int i=0; i<n; i++)
-        cout << A[i] << " ";
-    cout <<  findMaxRec(A, n); 
+    srand(time(NULL)); //seed the generator
+    int arr[10000];
+    for(int i = 0; i < 10000; i++)
+    {
+        arr[i] = rand()%50000; //huge number, you can give it a range by rand() % limit
+    }
+    int n = sizeof(arr)/sizeof(arr[0]); 
+    clock_t t; 
+    t = clock(); 
+    //cout <<  findMaxRec(arr, n); 
+    thread th1(findMaxRec,arr, n); 
+    th1.join();
+    //std:: thread first (findMaxRec(arr, n));
+    //std:: thread second (Particion(A, n, 10, 20));
+   // first.join();                // pauses until first finishes
+   // second.join();               // pauses until second finishes
+    ///cout <<  findMaxRec(arr, n); 
+    t = clock() - t; 
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
+    printf("\n took %f seconds to execute \n", time_taken); 
     return 0; 
-} 
+
+}
