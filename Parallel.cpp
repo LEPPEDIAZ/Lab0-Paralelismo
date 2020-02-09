@@ -55,11 +55,7 @@
         }
        for (i=0; i<asize/Num_Threads && j<asize; i++,j++){
          ret=pthread_join (threads[i], (void **)&status);
-         if (ret != 0) {
-                 printf( "Error juntando threads %d\n", (int)threads[i] );
-          } else {
-           printf( "Status = %d\n", status );
-           }
+         
         }
         for (i=0; i<asize; i++)
         {
@@ -76,6 +72,7 @@
         }
        t = clock() - t; 
        double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
-        printf("\n took %f seconds to execute \n", time_taken); 
+       printf("\n took %f seconds to execute \n", time_taken); 
+       
     return 0;
     }
